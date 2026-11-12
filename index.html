@@ -92,7 +92,7 @@ button{font:inherit}
 </div></div>
 <main id="main" hidden>
   <h1 id="title">Le calendrier de l’avent</h1>
-  <p class="sub">Pour <strong id="who"></strong>. Une case par jour, pas avant le jour J. Et pas de cuillère dans le Nutella avant l’heure.</p>
+  <p class="sub">Pour <strong id="who"></strong>. Une case par jour, pas avant le jour J.</p>
   <div class="frame"><div class="grid" id="grid"></div></div>
   <p class="count" id="count"></p>
 </main>
@@ -121,8 +121,8 @@ function addPhoto(box, base){
 }
 const CLOSE = {
  m:["Ok, c’est mignon","Je fais comme si je n’avais rien lu","Miaou"],
- d:["Ok, je m’en occupe","Peut-être demain","C'est négociable","Flemme..."],
- s:["Je m’en souviens très bien","On y retourne quand ?","J’avais oublié","C’était bien"]};
+ d:["Ok, je m’en occupe","Peut-être demain","C'est négociable ?","Flemme..."],
+ s:["Je m’en souviens très bien","On y retourne quand ?","J’avais complètement oublié","C’était trop bien"]};
 const shuffle = a => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
 // Photos : dossier « photos » à côté de index.html. Une ou plusieurs par case (liste), extension facultative (jpg, png, webp…). Les fichiers absents sont ignorés.
 const DAYS = [
