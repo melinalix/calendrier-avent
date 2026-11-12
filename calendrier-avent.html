@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Le calendrier de l’avent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c3326;--ink:#f7ecd5;--muted:#c9d8c4;--gold:#d9a441;--goldl:#f6df97;--goldd:#8a6414;--cream:#f7ecd5;--dark:#2a0c12;
+--disp:"Mountains of Christmas",Georgia,"Times New Roman",serif;
+color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{position:relative;margin:0;color:var(--ink);font-family:Lora,Georgia,serif;line-height:1.55;min-height:100vh;
+background:radial-gradient(ellipse at 50% 0%,#1d5a3f,#0c3326 55%,#061d15) fixed var(--bg)}
+.lights{position:absolute;left:0;right:0;top:0;pointer-events:none;z-index:1}
+.lights svg{display:block;width:100%;height:auto}
+.b ellipse{filter:drop-shadow(0 0 4px currentColor)}
+.b{animation:tw 2.4s ease-in-out infinite}
+@keyframes tw{50%{opacity:.4}}
+main{max-width:520px;margin:0 auto;padding:64px 16px 40px}
+h1{font-family:var(--disp);font-weight:700;font-size:2.4rem;line-height:1.05;margin:8px 0 10px;text-align:center;color:var(--gold);
+background:linear-gradient(180deg,var(--goldl),var(--gold) 55%,var(--goldd));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 2px rgba(0,0,0,.55));user-select:none}
+.sub{margin:0 0 28px;text-align:center;color:var(--muted);padding-bottom:20px;position:relative}
+.sub::after{content:"";position:absolute;left:10%;right:10%;bottom:0;height:5px;border-radius:3px;background:linear-gradient(180deg,var(--goldd),var(--goldl) 40%,var(--gold) 60%,var(--goldd))}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.door{aspect-ratio:1;border:0;border-radius:10px;position:relative;overflow:hidden;cursor:pointer;display:grid;place-items:center;font-size:1.25rem;
+box-shadow:0 5px 0 rgba(0,0,0,.45),0 8px 14px rgba(0,0,0,.35),inset 0 1px 2px rgba(255,255,255,.3);transition:transform .15s}
+.door{background:linear-gradient(135deg,#0a3322 0%,#237552 38%,#0f4630 55%,#2f8a60 76%,#0a3322 100%)}
+.door:nth-child(8n+1),.door:nth-child(8n+3),.door:nth-child(8n+6),.door:nth-child(8n+8){background:linear-gradient(135deg,#7d1223 0%,#cc2d44 38%,#8f1a2c 55%,#dc4459 76%,#7d1223 100%)}
+.door::before,.door::after{content:"";position:absolute}
+.door::before{left:0;right:0;top:50%;height:16%;translate:0 -50%;background:linear-gradient(180deg,var(--goldd),var(--goldl) 35%,var(--gold) 58%,var(--goldd));box-shadow:0 1px 2px rgba(0,0,0,.5)}
+.door::after{top:0;bottom:0;left:50%;width:16%;translate:-50% 0;background:linear-gradient(90deg,var(--goldd),var(--goldl) 35%,var(--gold) 58%,var(--goldd));box-shadow:1px 0 2px rgba(0,0,0,.5)}
+.n{position:relative;z-index:2;display:grid;place-items:center;width:62%;aspect-ratio:1;border-radius:50%;font-family:var(--disp);font-weight:700;font-size:1.3rem;color:#5a1220;
+background:radial-gradient(circle at 35% 30%,#fff3c4,#e9bf5b 45%,#a97a1c);box-shadow:0 1px 3px rgba(0,0,0,.6),inset 0 0 0 2px rgba(255,255,255,.25)}
+.door:active{transform:scale(.94)}
+.door:focus-visible{outline:3px solid var(--goldl);outline-offset:3px}
+.door.locked{filter:saturate(.55) brightness(.8)}
+.door.open{background:rgba(0,0,0,.2)!important;box-shadow:inset 0 0 0 2px var(--goldd)}
+.door.open::before,.door.open::after{display:none}
+.door.open .n{background:none;box-shadow:none;font-size:1.7rem;width:auto}
+.door.today{animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 5px rgba(246,223,151,.45),0 0 18px rgba(246,223,151,.6),0 5px 0 rgba(0,0,0,.45)}}
+.door.shake{animation:shake .4s}
+@keyframes shake{25%{translate:-6px 0}75%{translate:6px 0}}
+.count{margin-top:26px;text-align:center;color:var(--muted);font-size:.95rem}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));translate:-50% 20px;background:var(--cream);color:var(--dark);border:2px solid var(--gold);padding:10px 16px;border-radius:999px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;text-align:center;z-index:9}
+.toast.on{opacity:1;translate:-50% 0}
+.veil{position:fixed;inset:0;background:rgba(5,18,12,.85);display:none;align-items:center;justify-content:center;padding:20px;z-index:5}
+.veil.on{display:flex}
+.card{background:var(--cream);color:var(--dark);border-radius:6px;padding:30px 22px 22px;max-width:420px;width:100%;text-align:center;border:4px double var(--goldd);outline:3px solid var(--gold);outline-offset:-12px;box-shadow:0 12px 40px rgba(0,0,0,.6);animation:pop .3s ease-out}
+@keyframes pop{from{transform:scale(.7) rotate(-5deg);opacity:0}}
+.card .em{font-size:3rem;line-height:1}
+.card h2{font-family:var(--disp);font-weight:700;font-size:1.7rem;margin:8px 0 10px;color:#7d1223}
+.card p{margin:0 0 20px;font-size:1.1rem}
+.card button,.gbox button{font:inherit;font-weight:600;border:0;border-radius:999px;padding:12px 26px;cursor:pointer;color:var(--cream);background:linear-gradient(135deg,#7d1223,#cc2d44 50%,#8f1a2c);box-shadow:0 3px 0 rgba(0,0,0,.4),inset 0 1px 1px rgba(255,255,255,.3)}
+.card button:focus-visible,.gbox button:focus-visible{outline:3px solid var(--goldl);outline-offset:3px}
+.gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:70px 24px 24px}
+.gate[hidden]{display:none}
+.gbox{max-width:360px;width:100%;text-align:center}
+.gbox h1{font-size:2.2rem;margin-bottom:12px}
+.gbox p{color:var(--muted);margin:0 0 20px}
+.gbox input{width:100%;font:inherit;font-size:16px;padding:14px 16px;border-radius:12px;border:2px solid var(--gold);background:rgba(0,0,0,.3);color:var(--ink);text-align:center;margin-bottom:12px}
+.gbox input:focus-visible{outline:3px solid var(--goldl);outline-offset:2px}
+.gbox button{width:100%;padding:14px}
+.gerr{min-height:1.5em;margin:12px 0 0!important;color:#ff9aa8!important;font-weight:600}
+@media (prefers-reduced-motion:reduce){.door.today,.card,.b{animation:none}}
+</style>
+</head>
+<body>
+<div class="lights" id="lights"></div>
+<div class="gate" id="gate"><div class="gbox" id="gform">
+  <h1>Accès réservé</h1>
+  <p>Cette page est destinée à un seul humain. Mot de passe, s’il te plaît.</p>
+  <input type="password" id="gpw" placeholder="Mot de passe" aria-label="Mot de passe" autocapitalize="off">
+  <button type="button" id="gbtn">Entrer</button>
+  <p class="gerr" id="gerr" role="alert"></p>
+</div></div>
+<main id="main" hidden>
+  <h1 id="title">Le calendrier de l’avent le plus sérieux du monde</h1>
+  <p class="sub">Spécialement conçu pour <strong id="who"></strong>. Une case par jour, pas de triche, pas de cuillère dans le Nutella avant l’heure.</p>
+  <div class="grid" id="grid"></div>
+  <p class="count" id="count"></p>
+</main>
+<div class="toast" id="toast" role="status"></div>
+<div class="veil" id="veil"><div class="card" role="dialog" aria-modal="true" aria-labelledby="ct">
+  <div class="em" id="cem"></div><h2 id="ct"></h2><p id="cx"></p><button id="cb">Merci, c’est noté</button>
+</div></div>
+
+<script>
+// ✏️ À PERSONNALISER : le prénom et les 24 cases (t: m = message, s = souvenir, d = défi)
+const NAME = "Martin";
+const YEAR = 2026;
+const TYPES = {m:["💌","Message doux"], s:["📸","Souvenir"], d:["🎯","Défi du jour"]};
+const DAYS = [
+ {t:"m",x:"Bienvenue dans ton calendrier de l’avent ! 24 cases, des défis, des souvenirs et des mots doux. Siah et Phantom ont validé le projet (en marchant dessus)."},
+ {t:"d",x:"Défi express : photo officielle de Noël de toi et Phantom. Regard sérieux obligatoire, à m’envoyer ce soir. Bonus si Phantom est installé sur ton clavier."},
+ {t:"s",x:"Souvenir : Bruges à vélo. On l’a fait, on a survécu, et ça reste l’une de mes plus belles preuves que je peux tout faire avec toi."},
+ {t:"m",x:"Je ronfle ? Je conteste. Mais pour me faire pardonner, ce soir tu choisis le film et je ne dis rien, même pas un ronflement."},
+ {t:"d",x:"On est à Paris, mais sous Noël cette fois ! Mission : trouver la plus belle vitrine illuminée de la ville, photo obligatoire. Le meilleur choix gagne un chocolat chaud au caramel (offert par moi)."},
+ {t:"s",x:"Souvenir : les JO de Paris. On y était, on a crié, on a fait la queue partout. Aujourd’hui, on est à Paris sans foule olympique : c’est déjà une victoire. Tu mérites ta médaille."},
+ {t:"m",x:"Je te laisserais la plus grosse part de fromage. Cherche pas, c’est la preuve d’amour ultime."},
+ {t:"d",x:"Défi du jour : imite un chanteur de chanson française pendant 30 secondes. Vidéo non obligatoire (mais je la veux)."},
+ {t:"s",x:"Souvenir : Verbier, la luge, mon genou. Merci d’avoir été le meilleur infirmier du monde. La revanche se jouera sans luge et avec raclette."},
+ {t:"m",x:"Cette année, il y aura une oie de plus pour décorer la maison. Je ne te demande pas ton avis, je te préviens. Tu as joué à Untitled Goose Game : tu savais dans quoi tu t’engageais."},
+ {t:"d",x:"Mange un carré de chocolat ou un caramel en pensant très fort à moi. Photo du bonheur autorisée."},
+ {t:"d",x:"Je suis aux Scouts, mais pas toi : ce soir c’est soirée karaoké Karafun en solo. 3 chansons françaises minimum, la dernière doit faire pleurer les voisins. Plateau de fromage obligatoire. Envoie-moi un extrait !"},
+ {t:"d",x:"Marchés de Noël de Lille ! Mission : chacun choisit pour l’autre un petit truc à goûter (caramel, chocolat, fromage…). Interdit de refuser. Vin chaud en récompense."},
+ {t:"m",x:"Je t’aime. Je ne sais pas si je te l’ai dit aujourd’hui. Si oui, c’est un bonus. Et je te le jure : je ne te juge pas quand tu joues devant moi. Enfin presque pas."},
+ {t:"d",x:"Défi salsa express : montre-moi un pas que tu as appris en cours. Même sans musique. Même en pyjama."},
+ {t:"s",x:"Souvenir : Barcelone, Berlin, Bruxelles, Londres… On a visité plein de villes, mais ma préférée, c’est celle où je suis avec toi. Oui c’est cliché. Non je ne m’excuse pas."},
+ {t:"m",x:"Les chats ont voté : tu mérites des câlins supplémentaires. Phantom a voté deux fois (il a triché). Siah s’est contentée de dormir, ce qui compte comme un oui."},
+ {t:"d",x:"Écris-moi en 3 mots ce que tu aimes chez moi. Mon ego en a besoin avant les fêtes."},
+ {t:"d",x:"Encore les Scouts pour moi, alors cours de salsa à la maison : un tuto en ligne, un pas à apprendre, et un goûter caramel-chocolat pour la récompense. Ce soir, je veux une démonstration (si je t’écrase le pied, c’est de bonne guerre)."},
+ {t:"d",x:"Dimanche gourmand ! Je cuisine, tu choisis la playlist Karafun et on se fait une soirée fromage avec un dessert caramel-chocolat. Tu es le DJ officiel (et le chanteur). Après le dessert : une partie en co-op, tu choisis le jeu. Je promets de ne pas rager (c’est faux)."},
+ {t:"s",x:"Souvenir : le Sénégal. Merci de partir à l’aventure avec moi, partout. La prochaine destination, on la choisit ensemble ? (Spoiler : il y aura du fromage.)"},
+ {t:"d",x:"Défi : choisis notre prochaine destination de rêve. Pas besoin de pouvoir se la payer. Dis-moi aussi pourquoi."},
+ {t:"m",x:"Dernière ligne droite ! Ce soir : pyjama, chats, plaid. Et une promesse : je ronfle moins. (C’est faux.)"},
+ {t:"m",x:"Joyeux Noël, mon amour ! 🎁 Ton cadeau est caché près de l’oie la plus moche de la maison. Bonne chasse !"}
+];
+// Ordre mélangé, comme un vrai calendrier
+const ORDER = [14,3,22,9,17,1,24,6,12,20,5,15,8,23,2,18,11,4,21,10,16,7,19,13];
+
+const $ = id => document.getElementById(id);
+let opened = [], test = false, taps = 0;
+try { opened = JSON.parse(localStorage.getItem("avent-ouvertes") || "[]"); } catch(e){}
+if (location.hash === "#test") test = true;
+$("who").textContent = NAME;
+
+function today(){ const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); }
+function unlocked(d){ return test || today() >= new Date(YEAR,11,d); }
+function isToday(d){ return today().getTime() === new Date(YEAR,11,d).getTime(); }
+function save(){ try{ localStorage.setItem("avent-ouvertes", JSON.stringify(opened)); }catch(e){} }
+
+function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("on"); clearTimeout(toast.h); toast.h=setTimeout(()=>t.classList.remove("on"),2200); }
+
+function render(){
+  const g=$("grid"); g.innerHTML="";
+  ORDER.forEach(d=>{
+    const b=document.createElement("button");
+    const isOpen=opened.includes(d);
+    b.className="door"+(isOpen?" open":"")+(!unlocked(d)?" locked":"")+(isToday(d)&&!isOpen?" today":"");
+    b.innerHTML = '<span class="n">' + (isOpen ? TYPES[DAYS[d-1].t][0] : d) + '</span>';
+    b.setAttribute("aria-label", isOpen ? "Case "+d+" (déjà ouverte)" : "Case "+d);
+    b.onclick=()=>openDoor(d,b);
+    g.appendChild(b);
+  });
+  $("count").textContent = opened.length+" / 24 cases ouvertes" + (test ? " (mode test)" : "");
+}
+
+function openDoor(d,b){
+  if(!unlocked(d)){
+    b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake");
+    toast("Pas touche avant le "+d+" décembre 😤");
+    return;
+  }
+  const c=DAYS[d-1], [em,label]=TYPES[c.t];
+  $("cem").textContent=em; $("ct").textContent=label+" · "+d+" décembre"; $("cx").textContent=c.x;
+  $("veil").classList.add("on"); $("cb").focus();
+  if(!test && !opened.includes(d)){ opened.push(d); save(); }
+  else if(test && !opened.includes(d)){ opened.push(d); }
+}
+function close(){ $("veil").classList.remove("on"); render(); }
+$("cb").onclick=close;
+$("veil").onclick=e=>{ if(e.target===$("veil")) close(); };
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") close(); });
+
+// Mode test : 5 taps sur le titre pour tout débloquer (aperçu pour toi, sans rien sauvegarder)
+$("title").onclick=()=>{
+  taps++; clearTimeout($("title").h); $("title").h=setTimeout(()=>taps=0,1500);
+  if(taps>=5){ taps=0; test=!test; if(test){ opened=[]; } else { try{ opened=JSON.parse(localStorage.getItem("avent-ouvertes")||"[]"); }catch(e){ opened=[]; } }
+    toast(test?"Mode test activé 🕵️":"Mode test désactivé"); render(); }
+};
+render();
+
+// 🔒 À PERSONNALISER : le mot de passe (majuscules et espaces ignorés)
+const PASSWORD = "MartinMatin";
+const ERRORS = ["Raté ! Réfléchis, c’est quelque chose qu’on connaît tous les deux.","Non. Même pas proche. Je suis déçu(e) 😌","Mauvais mot de passe. Un indice ? Demande-moi gentiment.","Tu essaies de rentrer chez quelqu’un d’autre ? 🕵️"];
+let errN = 0;
+const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f\s'’-]/g, "").toLowerCase();
+function unlockPage(){ $("gate").hidden = true; $("main").hidden = false; }
+try { if (localStorage.getItem("avent-ok") === "1") unlockPage(); } catch(e){}
+function tryPw(){
+  if (norm($("gpw").value) === norm(PASSWORD)) {
+    try { localStorage.setItem("avent-ok", "1"); } catch(e){}
+    unlockPage();
+  } else {
+    $("gerr").textContent = ERRORS[errN++ % ERRORS.length];
+    $("gpw").value = ""; $("gpw").focus();
+  }
+}
+$("gbtn").onclick = tryPw;
+$("gpw").addEventListener("keydown", e => { if (e.key === "Enter") tryPw(); });
+
+(function(){const C=["#ff4d5e","#ffd166","#5ee0a0","#6ab7ff"],n=4,sw=520/n;let p="M0 4 ",b="",k=0;
+for(let i=0;i<n;i++){const x0=i*sw,x1=x0+sw,xm=x0+sw/2;p+="Q"+xm+" 52 "+x1+" 4 ";
+for(let j=1;j<=5;j++){const t=j/6,u=1-t,x=u*u*x0+2*u*t*xm+t*t*x1,y=u*u*4+2*u*t*52+t*t*4;
+b+='<g class="b" style="animation-delay:-'+(k%5*.5)+'s;color:'+C[k%4]+'"><rect x="'+(x-2).toFixed(1)+'" y="'+y.toFixed(1)+'" width="4" height="5" fill="#2a2a2a"/><ellipse cx="'+x.toFixed(1)+'" cy="'+(y+10).toFixed(1)+'" rx="4.5" ry="6.5" fill="currentColor"/></g>';k++;}}
+document.getElementById("lights").innerHTML='<svg viewBox="0 0 520 50" aria-hidden="true"><path d="'+p+'" fill="none" stroke="#111" stroke-width="1.6"/>'+b+'</svg>';})();
+</script>
+</body>
+</html>
