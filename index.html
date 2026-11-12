@@ -61,6 +61,7 @@ box-shadow:0 6px 12px rgba(0,0,0,.5);transition:transform .15s}
 .ph img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
 .photos[data-n="1"] .ph{width:82%}
 .photos[data-n="1"] .ph img{aspect-ratio:auto;max-height:48vh;object-fit:contain;background:#fff}
+#snow{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:7}
 .zoom{position:fixed;inset:0;background:rgba(3,14,9,.96);display:none;align-items:center;justify-content:center;z-index:8;padding:12px;cursor:zoom-out}
 .zoom.on{display:flex}
 .zoom img{max-width:100%;max-height:100%;object-fit:contain}
@@ -92,7 +93,7 @@ button{font:inherit}
 </div></div>
 <main id="main" hidden>
   <h1 id="title">Le calendrier de l’avent</h1>
-  <p class="sub">Pour <strong id="who"></strong>. Une case par jour, pas avant le jour J.</p>
+  <p class="sub">Pour <strong id="who"></strong>. Une case par jour, pas avant le jour J. Et pas de cuillère dans le Nutella avant l’heure.</p>
   <div class="frame"><div class="grid" id="grid"></div></div>
   <p class="count" id="count"></p>
 </main>
@@ -118,6 +119,49 @@ function addPhoto(box, base){
   im.onload = () => { box.hidden = false; };
   im.onclick = () => { $("zoom").querySelector("img").src = im.currentSrc || im.src; $("zoom").classList.add("on"); };
   im.src = cand[0]; fig.appendChild(im); box.appendChild(fig);
+}
+// Neige qui tombe du haut de l’écran à l’ouverture d’une case
+const cv = document.createElement("canvas"); cv.id = "snow"; document.body.appendChild(cv);
+let run = 0;
+function snow(){
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const my = ++run, dpr = Math.min(devicePixelRatio || 1, 2), W = innerWidth, H = innerHeight;
+  cv.width = W * dpr; cv.height = H * dpr;
+  const g = cv.getContext("2d"); g.scale(dpr, dpr);
+  const P = [];
+  for (let i = 0; i < 85; i++) {
+    const big = Math.random() < .3;
+    P.push({x: Math.random() * W, y: -14, d: Math.random() * 90, big,
+      s: big ? 6 + Math.random() * 5 : 1.5 + Math.random() * 2.5,
+      vy: (big ? 2.4 : 3) + Math.random() * 1.8, ph: Math.random() * 6, sw: .5 + Math.random() * 1.1,
+      r: Math.random() * 6, vr: (Math.random() - .5) * .04, c: Math.random() < .2 ? "#f6df97" : "#ffffff"});
+  }
+  let t = 0;
+  (function f(){
+    if (my !== run) return;
+    g.clearRect(0, 0, W, H); t++;
+    let alive = false;
+    P.forEach(p => {
+      if (t < p.d) { alive = true; return; }
+      p.y += p.vy; p.x += Math.sin((t + p.ph * 20) * .04) * p.sw; p.r += p.vr;
+      if (p.y > H + 14) return;
+      alive = true;
+      g.globalAlpha = .9; g.shadowColor = "rgba(255,255,255,.7)"; g.shadowBlur = 6;
+      g.save(); g.translate(p.x, p.y);
+      if (p.big) {
+        g.rotate(p.r); g.strokeStyle = p.c; g.lineWidth = 1.3; g.lineCap = "round";
+        for (let k = 0; k < 6; k++) {
+          g.rotate(Math.PI / 3); g.beginPath();
+          g.moveTo(0, 0); g.lineTo(0, -p.s);
+          g.moveTo(0, -p.s * .6); g.lineTo(-p.s * .3, -p.s * .9);
+          g.moveTo(0, -p.s * .6); g.lineTo(p.s * .3, -p.s * .9);
+          g.stroke();
+        }
+      } else { g.fillStyle = p.c; g.beginPath(); g.arc(0, 0, p.s / 2, 0, 7); g.fill(); }
+      g.restore();
+    });
+    if (alive) requestAnimationFrame(f); else g.clearRect(0, 0, W, H);
+  })();
 }
 const CLOSE = {
  m:["Ok, c’est mignon","Je fais comme si je n’avais rien lu","Miaou"],
@@ -193,7 +237,7 @@ function openDoor(d,b){
   [].concat(c.p||[]).forEach(b=>addPhoto(ph,b)); fit(ph);
   const A=$("cacts"); A.innerHTML="";
   shuffle(CLOSE[c.t]).slice(0,3).forEach(l=>{ const b2=document.createElement("button"); b2.textContent=l; b2.onclick=close; A.appendChild(b2); });
-  $("veil").classList.add("on"); A.firstChild.focus();
+  $("veil").classList.add("on"); A.firstChild.focus(); snow();
   if(!test && !opened.includes(d)){ opened.push(d); save(); }
   else if(test && !opened.includes(d)){ opened.push(d); }
 }
