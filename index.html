@@ -53,9 +53,17 @@ box-shadow:0 6px 12px rgba(0,0,0,.5);transition:transform .15s}
 @keyframes pop{from{transform:scale(.8);opacity:0}}
 .card h2{font-family:var(--disp);font-weight:700;font-size:1.5rem;margin:0 0 12px;color:var(--wine)}
 .card p{margin:0 0 20px;font-size:1.35rem;font-weight:500;line-height:1.45}
-.photo{width:74%;margin:0 auto 22px;background:#fff;padding:8px 8px 26px;box-shadow:0 5px 14px rgba(0,0,0,.45);rotate:-2deg}
-.photo[hidden]{display:none}
-.photo img{display:block;width:100%;height:auto}
+.photos{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 10px;margin:0 0 22px}
+.photos[hidden]{display:none}
+.ph{margin:0;background:#fff;padding:7px 7px 22px;box-shadow:0 5px 14px rgba(0,0,0,.45);width:calc(50% - 5px);cursor:zoom-in}
+.ph:nth-child(odd){rotate:-2deg}
+.ph:nth-child(even){rotate:1.8deg}
+.ph img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+.photos[data-n="1"] .ph{width:82%}
+.photos[data-n="1"] .ph img{aspect-ratio:auto;max-height:48vh;object-fit:contain;background:#fff}
+.zoom{position:fixed;inset:0;background:rgba(3,14,9,.96);display:none;align-items:center;justify-content:center;z-index:8;padding:12px;cursor:zoom-out}
+.zoom.on{display:flex}
+.zoom img{max-width:100%;max-height:100%;object-fit:contain}
 .acts{display:flex;flex-direction:column;align-items:center;gap:8px}
 button{font:inherit}
 .acts button,.gbox button{font-weight:700;font-size:1.1rem;border:0;border-radius:999px;padding:11px 22px;min-width:74%;cursor:pointer;color:var(--cream);background:linear-gradient(135deg,var(--wine),#b32439 50%,#80182a);box-shadow:0 3px 8px rgba(0,0,0,.35)}
@@ -88,9 +96,10 @@ button{font:inherit}
   <div class="frame"><div class="grid" id="grid"></div></div>
   <p class="count" id="count"></p>
 </main>
+<div class="zoom" id="zoom"><img alt=""></div>
 <div class="toast" id="toast" role="status"></div>
 <div class="veil" id="veil"><div class="card" role="dialog" aria-modal="true" aria-labelledby="ct">
-  <div class="em" id="cem"></div><h2 id="ct"></h2><p id="cx"></p><div class="photo" id="cph" hidden></div><div class="acts" id="cacts"></div>
+  <div class="em" id="cem"></div><h2 id="ct"></h2><p id="cx"></p><div class="photos" id="cph" hidden></div><div class="acts" id="cacts"></div>
 </div></div>
 
 <script>
@@ -98,12 +107,24 @@ button{font:inherit}
 const NAME = "Martin";
 const YEAR = 2026;
 const TYPES = {m:["","Message"], s:["","Souvenir"], d:["","Défi du jour"]};
+const EXTS = ["jpg","jpeg","png","webp","JPG","JPEG","PNG"];
+const fit = box => { box.dataset.n = Math.min(box.children.length, 5); };
+function addPhoto(box, base){
+  const fig = document.createElement("figure"); fig.className = "ph";
+  const im = new Image(); im.alt = ""; im.decoding = "async";
+  const cand = /\.\w{3,4}$/.test(base) ? [base] : EXTS.map(e => base + "." + e);
+  let k = 0;
+  im.onerror = () => { if (++k < cand.length) im.src = cand[k]; else { fig.remove(); fit(box); } };
+  im.onload = () => { box.hidden = false; };
+  im.onclick = () => { $("zoom").querySelector("img").src = im.currentSrc || im.src; $("zoom").classList.add("on"); };
+  im.src = cand[0]; fig.appendChild(im); box.appendChild(fig);
+}
 const CLOSE = {
- m:["Ça me touche, bêtement","Ok, c’est mignon","Je fais comme si je n’avais rien lu","À demain"],
+ m:["Ok, c’est mignon","Je fais comme si je n’avais rien lu"],
  d:["Ok, je m’en occupe","Peut-être demain","Je négocie les règles","Ça marche"],
- s:["Je m’en souviens très bien","On y retourne quand ?","J’avais oublié la moitié","C’était bien"]};
+ s:["Je m’en souviens très bien","On y retourne quand ?","J’avais oublié","C’était bien"]};
 const shuffle = a => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
-// Photos : mets-les dans un dossier « photos » à côté de index.html et garde ces noms (p:"…")
+// Photos : dossier « photos » à côté de index.html. Une ou plusieurs par case (liste), extension facultative (jpg, png, webp…). Les fichiers absents sont ignorés.
 const DAYS = [
  {t:"s",p:"photos/chats.jpg",x:"Bienvenue dans ton calendrier de l’avent. Une case par jour, pas de triche. Siah et Phantom ont validé le projet."},
  {t:"d",x:"Prends-toi en photo avec Phantom, comme sur une carte de vœux. Bonus si Phantom est installé sur ton bureau."},
@@ -169,7 +190,7 @@ function openDoor(d,b){
   const c=DAYS[d-1], [em,label]=TYPES[c.t];
   $("cem").textContent=em; $("ct").textContent=label+" · "+d+" décembre"; $("cx").textContent=c.x;
   const ph=$("cph"); ph.innerHTML=""; ph.hidden=true;
-  if(c.p){ const im=new Image(); im.alt=""; im.onload=()=>{ph.hidden=false}; im.src=c.p; ph.appendChild(im); }
+  [].concat(c.p||[]).forEach(b=>addPhoto(ph,b)); fit(ph);
   const A=$("cacts"); A.innerHTML="";
   shuffle(CLOSE[c.t]).slice(0,3).forEach(l=>{ const b2=document.createElement("button"); b2.textContent=l; b2.onclick=close; A.appendChild(b2); });
   $("veil").classList.add("on"); A.firstChild.focus();
@@ -178,7 +199,8 @@ function openDoor(d,b){
 }
 function close(){ $("veil").classList.remove("on"); render(); }
 $("veil").onclick=e=>{ if(e.target===$("veil")) close(); };
-document.addEventListener("keydown",e=>{ if(e.key==="Escape") close(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ $("zoom").classList.remove("on"); close(); } });
+$("zoom").onclick=()=>$("zoom").classList.remove("on");
 
 // Mode test : 5 taps sur le titre pour tout débloquer (aperçu pour toi, sans rien sauvegarder)
 $("title").onclick=()=>{
