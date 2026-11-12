@@ -120,13 +120,13 @@ function addPhoto(box, base){
   im.src = cand[0]; fig.appendChild(im); box.appendChild(fig);
 }
 const CLOSE = {
- m:["Ok, c’est mignon","Je fais comme si je n’avais rien lu"],
- d:["Ok, je m’en occupe","Peut-être demain","Je négocie les règles","Ça marche"],
+ m:["Ok, c’est mignon","Je fais comme si je n’avais rien lu","Miaou"],
+ d:["Ok, je m’en occupe","Peut-être demain","C'est négociable","Flemme..."],
  s:["Je m’en souviens très bien","On y retourne quand ?","J’avais oublié","C’était bien"]};
 const shuffle = a => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
 // Photos : dossier « photos » à côté de index.html. Une ou plusieurs par case (liste), extension facultative (jpg, png, webp…). Les fichiers absents sont ignorés.
 const DAYS = [
- {t:"s",p:["photos/chats"],x:"Bienvenue dans ton calendrier de l’avent. Une case par jour, pas de triche. Siah et Phantom ont validé le projet."},
+ {t:"m",p:["photos/chats"],x:"Bienvenue dans ton calendrier de l’avent. Une case par jour, pas de triche. Siah et Phantom ont validé le projet."},
  {t:"d",x:"Prends-toi en photo avec Phantom, comme sur une carte de vœux. Bonus si Phantom est installé sur ton bureau."},
  {t:"s",p:["photos/bruges"],x:"Bruges à vélo. On l’a fait, on a survécu, et ça reste l’une de mes plus belles preuves que je peux tout faire avec toi."},
  {t:"m",x:"Il parait que je ronfle, mais pour me faire pardonner, ce soir tu choisis le film et je ne dis rien, même pas un ronflement."},
